@@ -1,0 +1,2 @@
+web: https://hashcat.net
+discord: https://hashcat.net/discord

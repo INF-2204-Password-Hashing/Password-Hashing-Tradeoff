@@ -1,0 +1,20 @@
+Device Status Codes:
+====================
+
+ 0 = "Initializing"
+ 1 = "Autotuning"
+ 2 = "Selftest"
+ 3 = "Running"
+ 4 = "Paused"
+ 5 = "Exhausted"
+ 6 = "Cracked"
+ 7 = "Aborted"
+ 8 = "Quit"
+ 9 = "Bypass"
+10 = "Aborted (Checkpoint)"
+11 = "Aborted (Runtime)"
+13 = "Error"
+14 = "Aborted (Finish)"
+16 = "Autodetect"
+
+The pending checkpoint and finish messages are display strings, not device status codes. The numeric status remains 3 while running and 4 while paused.

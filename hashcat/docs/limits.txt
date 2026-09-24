@@ -1,0 +1,72 @@
+##
+## Maximum password length depends on the kernel, hash type and encoding
+##
+
+See https://hashcat.net/faq/lengths
+
+##
+## Generic salt storage is limited to 256 bytes
+##
+
+Hash modes that use the generic salt structure, such as md5(pass.salt), can store at most 256 bytes of salt. A dedicated mode can place additional data in its own extended-salt structure, but its format and module still define a finite limit.
+
+##
+## Optimized kernels can produce false negatives for some UTF-16 input
+##
+
+This applies to optimized kernels (-O) only:
+
+The optimized in-kernel conversion favors performance over complete encoding support. It does not implement every rule required to convert encodings such as UTF-8 to UTF-16LE or UTF-16BE. In particular, multibyte characters can fail because the optimized path generally inserts a zero byte after each input byte.
+
+Pure kernels have provided complete UTF-16 conversion since hashcat v6.2.1.
+
+One exception applies to mask attacks on devices that require vector data types for full performance, such as modern CPUs. A mask containing characters outside ASCII requires `--backend-vector-width 1` on those devices. Modern GPUs handle the conversion as expected.
+
+##
+## --keep-guessing can miss a colliding password
+##
+
+hashcat reports cracked hashes through a buffer with one entry for each loaded hash. The buffer is emptied after every kernel invocation, and the first candidate to reach a hash occupies its entry. Without `--keep-guessing`, this is sufficient because hashcat stops searching for a hash after it is cracked.
+
+With `--keep-guessing`, the hash remains active and a second candidate can match it during the same kernel invocation. No free entry remains for that result, so it is dropped. Whichever candidate the device reaches first survives, and reversing the candidate order can therefore report a different password.
+
+Reporting every candidate of one kernel invocation would need an entry for every candidate that invocation runs:
+
+Number-of-MCU * Max-threads * Max-accel * Max-inner-loops * sizeof (plain_t)
+
+For example, on an RTX 4090: 128 * 1024 * 1024 * 1024 * 40 = 5,497,558,138,880 bytes = 5120 GB VRAM
+
+This requirement is impractical for a fast hash, but slow hashes have a lower bound. A slow hash reports from its `_comp` kernel once per work item, while its `_loop` kernel repeats key derivation for the same candidate instead of producing new candidates. The inner-loop factor therefore drops out, leaving the number of work items as the bound.
+
+On an RX 7900 XTX, the required entries occupy 17 MB for mode 11600 and 396 MB for modes 23100, 24410 and 24420. hashcat does not currently allocate such a buffer, so those modes can lose collisions in the same way as fast hashes. Unlike the fast-hash case, however, retaining every collision would require a practical amount of memory.
+
+##
+## Device memory usage may be limited by the maximum size of one allocation
+##
+
+Most hashcat buffers must each fit in one contiguous device-memory allocation. The maximum depends on the backend, runtime, driver and device. OpenCL guarantees that at least one quarter of global memory can be allocated at once, but a runtime may allow more.
+
+Only a few modes, such as scrypt, split their storage across several allocations.
+
+##
+## A rule can contain at most 31 functions
+##
+
+This limit makes each rule 128 bytes. The number of rules that fit on a device therefore depends on the available memory and the largest single allocation permitted by its backend and runtime. Supporting more functions would enlarge every rule and reduce the number that fits.
+
+##
+## Rules support 36 position identifiers
+##
+
+The original rule-engine design limits position arguments to the 36 identifiers `0-9` and `A-Z`.
+
+##
+## Register-spill memory remains allocated
+##
+
+When a kernel requires more registers than the hardware can provide, the CUDA runtime automatically spills register data into global memory. After the kernel finishes, this reserved memory is not released by the CUDA runtime. The only way to free it is to destroy the CUDA context.
+
+This has no effect on a normal run because the context is destroyed when hashcat exits.
+
+Benchmarks previously kept the same context across every hash-mode test. Available device memory consequently decreased throughout the run, reducing performance and sometimes causing a runtime error. hashcat now destroys and recreates the context between modes to release that memory. If a device context cannot be recreated, hashcat skips the device instead of using an invalid handle.
+
