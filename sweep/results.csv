@@ -1,0 +1,2 @@
+label,hashcat_mode,hash_median_s,hash_p95_s,hash_max_s,mean_guesses_per_sec,recovered
+sha256,1400,6.199998097144999e-07,6.930004019523039e-07,3.851999281323515e-06,905880000.0,True
