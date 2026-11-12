@@ -13,7 +13,8 @@ CSV_PATH = Path("results.csv")
 FIELDNAMES = [
     "label", 
     "hashcat_mode",
-    "hash_median_s", 
+    "hash_median_s",
+    "hash_p95_s",
     "hash_max_s",
     "mean_guesses_per_sec", 
     "recovered",
@@ -41,6 +42,7 @@ def main():
                 "label": job.label,
                 "hashcat_mode": job.hashcat_mode,
                 "hash_median_s": latency["median_s"],
+                "hash_p95_s": latency["p95_s"],
                 "hash_max_s": latency["max_s"],
                 "mean_guesses_per_sec": crack["mean_guesses_per_sec"],
                 "recovered": crack["recovered"],
@@ -50,7 +52,7 @@ def main():
             f.flush()
             n_done += 1
 
-            #result = run_hashcat(crack_hash, "1400", CRACK_MASK)
+            #result = run_hashcat(crack_hash, "8900", CRACK_MASK)
             #print(result["raw_output"])
 
             print(
