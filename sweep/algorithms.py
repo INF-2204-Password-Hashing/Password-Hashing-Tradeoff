@@ -108,8 +108,8 @@ def argon2id_jobs() -> list[Job]:
 def all_jobs() -> list[Job]:
     return (
         sha256_jobs()
-        #+ pbkdf2_jobs()
-        #+ bcrypt_jobs()
-        #+ scrypt_jobs()
-        #+ argon2id_jobs()
+        + pbkdf2_jobs()
+        + bcrypt_jobs()
+        + scrypt_jobs()
+        + argon2id_jobs()
     )

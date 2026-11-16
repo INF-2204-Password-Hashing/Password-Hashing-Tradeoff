@@ -6,8 +6,9 @@ from common import time_hashing, password_mask, run_hashcat_trials
 from algorithms import all_jobs
 
 LATENCY_PASSWORD = b"N0&F1xfory0u"                  # reslistic password for timing
-CRACK_PASSWORD = b"abc123"                          # small keypace used for hashing
-CRACK_MASK = password_mask(CRACK_PASSWORD.decode())
+CRACK_PASSWORD = b"Nlr3G41x"                          # small keypace used for hashing (originally "abc123")
+CRACK_MASK = b"?a?a?a?a?a?a?a?a"
+#CRACK_MASK = password_mask(CRACK_PASSWORD.decode())
 
 CSV_PATH = Path("results.csv")
 FIELDNAMES = [
