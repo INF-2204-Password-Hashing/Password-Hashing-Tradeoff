@@ -39,13 +39,11 @@ Crack mask
 ```python 
 CRACK_MASK = "?a?a?a?a?a?a?a?a"
 ```
-```
 
-```
 is the current mask. It must match the length and character class assumptions, used in the exhaustion time formula (95^8 keyspace, if left as the 8-character full-printable-ASCII default). It is heavily advised that you choose a smaller password than the current random 8 character password, as well as commenting out the current CRACK_MASK and commenting in the automatic one for a smoother and faster experience, as even the pipeline testing of 'abc123' took about 3+ hours on the original test machine.
-```
 
-```
+
+
 ### Device selection
 
 
