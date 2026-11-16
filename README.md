@@ -55,7 +55,7 @@ Hardcoded into `common.py`. OpenCL device index that worked on the original test
 
 ## Running it
 
-Quick check: in `algorithms.py``, comment out all algorithms except for SHA-256, and then run: `python3 main.py`.
+Quick check: in `algorithms.py`, comment out all algorithms except for SHA-256, and then run: `python3 main.py`.
 
 This should finish fairly quickly and produce a .csv file with only one relevant row. If it work comment in the rest and run the same way.
 
