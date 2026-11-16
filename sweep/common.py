@@ -6,7 +6,7 @@ from pathlib import Path
 
 HASH_FILE = Path("hash.txt")
 
-def time_hashing(fn, password:bytes, n_warmup: int = 50, n_runs: int = 250) -> dict:
+def time_hashing(fn, password:bytes, n_warmup: int = 50, n_runs: int = 250) -> dict:    # hashing runs and warmup
 
     for _ in range(n_warmup):
         fn(password)
@@ -27,7 +27,7 @@ def time_hashing(fn, password:bytes, n_warmup: int = 50, n_runs: int = 250) -> d
 
 # cracking latency (small password so it actually finishes KEKL)
 
-def password_mask(password:str) -> str:     # automatic masking
+def password_mask(password:str) -> str:     # automatic masking, ONLY if it's activated on main
     mask_parts = []
     for ch in password:
         if ch.islower():
@@ -40,7 +40,7 @@ def password_mask(password:str) -> str:     # automatic masking
             mask_parts.append("?s")         # may not work with certain symbols
     return "".join(mask_parts)
 
-def run_hashcat(hash_str: str, mode: str, mask: str, device: str = "2", runtime_cap_s: int = 60) -> dict:
+def run_hashcat(hash_str: str, mode: str, mask: str, device: str = "2", runtime_cap_s: int = 60) -> dict:       # max amount of time one iteration is allowed to work
 
     HASH_FILE.write_text(hash_str + "\n")
 

@@ -105,7 +105,7 @@ def argon2id_jobs() -> list[Job]:
     return jobs
  
 
-def all_jobs() -> list[Job]:
+def all_jobs() -> list[Job]:        # comment out the ones you don't want
     return (
         sha256_jobs()
         + pbkdf2_jobs()

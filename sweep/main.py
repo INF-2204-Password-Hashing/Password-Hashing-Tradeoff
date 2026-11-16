@@ -8,7 +8,7 @@ from algorithms import all_jobs
 LATENCY_PASSWORD = b"N0&F1xfory0u"                  # reslistic password for timing
 CRACK_PASSWORD = b"Nlr3G41x"                          # small keypace used for hashing (originally "abc123")
 CRACK_MASK = b"?a?a?a?a?a?a?a?a"
-#CRACK_MASK = password_mask(CRACK_PASSWORD.decode())
+#CRACK_MASK = password_mask(CRACK_PASSWORD.decode())    # automatic crack mask 
 
 CSV_PATH = Path("results.csv")
 FIELDNAMES = [
@@ -36,8 +36,8 @@ def main():
             latency = time_hashing(job.hash_for_timing, LATENCY_PASSWORD)
 
             crack_hash = job.hash_for_crack(CRACK_PASSWORD)
-            crack = run_hashcat_trials(crack_hash, job.hashcat_mode, CRACK_MASK, n_trials = 5)
-            result = run_hashcat_trials(crack_hash, job.hashcat_mode, CRACK_MASK, n_trials=5)
+            crack = run_hashcat_trials(crack_hash, job.hashcat_mode, CRACK_MASK, n_trials = 5)      # actual number of runs 
+            #result = run_hashcat_trials(crack_hash, job.hashcat_mode, CRACK_MASK, n_trials = 5)    # used for debug
 
             row = {
                 "label": job.label,
@@ -53,7 +53,7 @@ def main():
             f.flush()
             n_done += 1
 
-            #result = run_hashcat(crack_hash, "8900", CRACK_MASK)
+            #result = run_hashcat(crack_hash, "8900", CRACK_MASK)       # used for debug
             #print(result["raw_output"])
 
             print(
